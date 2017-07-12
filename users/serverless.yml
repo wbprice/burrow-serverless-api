@@ -31,6 +31,10 @@ functions:
   read:
     handler: handler.read
     events:
+      - http:
+          path: users
+          method: get
+          cors: true
       - http: 
           path: users/{id}
           method: get 
