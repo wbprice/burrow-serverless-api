@@ -29,6 +29,7 @@ function create(event, context, callback) {
             id: uuid.v1(),
             name: data.name,
             emailAddress: data.emailAddress,
+            password: data.password,
             createdAt: timestamp,
             updatedAt: timestamp
         }
