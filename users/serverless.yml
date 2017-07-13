@@ -35,6 +35,9 @@ functions:
           path: users
           method: get
           cors: true
+          request:
+            template:
+              application/json: '{ "emailAddress" : "$input.params(''emailAddress''"}'
       - http: 
           path: users/{id}
           method: get 

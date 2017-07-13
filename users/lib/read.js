@@ -40,6 +40,27 @@ function readOne(id, callback) {
     });
 }
 
+function searchByEmailAddress(emailAddress, callback) {
+    const params = {
+        TableName: process.env.DYNAMODB_TABLE,
+        FilterExpression: 'emailAddress = :emailAddress',
+        ExpressionAttributeValues: {
+            ':emailAddress': emailAddress
+        }
+    }
+
+    dynamoDbClient.scan(params, (error, result) => {
+        if (error) { 
+            console.log(error);
+            return callback('Couldn\'t find that record');
+        }
+        callback(null, {
+            statusCode: 200,
+            body: JSON.stringify(result.Items)
+        });
+    });
+}
+
 /**
  * @name
  * read
@@ -52,9 +73,12 @@ function readOne(id, callback) {
 
 function read(event, context, callback) {
     const id = event.pathParameters && event.pathParameters.id;
+    const emailAddress = event.queryStringParameters && event.queryStringParameters.emailAddress;
 
     if (id) {
         return readOne(id, callback);
+    } else if (emailAddress) {
+        return searchByEmailAddress(emailAddress, callback);
     }
     return list(callback);
 }
