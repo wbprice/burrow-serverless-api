@@ -27,9 +27,9 @@ function create(event, context, callback) {
         TableName: process.env.DYNAMODB_TABLE,
         Item: {
             id: uuid.v1(),
-            name: data.name,
-            emailAddress: data.emailAddress,
-            password: data.password,
+            owner: 'unowned',
+            name: data && data.name || 'Remote',
+            temperature: data && data.temperature || 72,
             createdAt: timestamp,
             updatedAt: timestamp
         }
@@ -39,7 +39,7 @@ function create(event, context, callback) {
         // handle errors
         if (error) {
             console.error(error);
-            callback(new Error('Couldn\'t create the user'));
+            callback(new Error('Couldn\'t create the remote'));
             return;
         }
 

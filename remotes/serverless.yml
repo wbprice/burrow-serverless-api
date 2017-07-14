@@ -37,7 +37,7 @@ functions:
           cors: true
           request:
             template:
-              application/json: '{ "emailAddress" : "$input.params(''emailAddress''"}'
+                application/json: '{ "name" : "$input.params(''name''", "temperature": "$input.params(''temperature''"}'
       - http: 
           path: remotes/{id}
           method: get 

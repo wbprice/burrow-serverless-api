@@ -40,12 +40,12 @@ function readOne(id, callback) {
     });
 }
 
-function searchByEmailAddress(emailAddress, callback) {
+function searchByOwner(owner, callback) {
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
-        FilterExpression: 'emailAddress = :emailAddress',
+        FilterExpression: 'owner = :owner',
         ExpressionAttributeValues: {
-            ':emailAddress': emailAddress
+            ':owner': owner
         }
     }
 
@@ -73,12 +73,12 @@ function searchByEmailAddress(emailAddress, callback) {
 
 function read(event, context, callback) {
     const id = event.pathParameters && event.pathParameters.id;
-    const emailAddress = event.queryStringParameters && event.queryStringParameters.emailAddress;
+    const owner = event.queryStringParameters && event.queryStringParameters.owner;
 
     if (id) {
         return readOne(id, callback);
-    } else if (emailAddress) {
-        return searchByEmailAddress(emailAddress, callback);
+    } else if (owner) {
+        return searchByOwner(owner, callback);
     }
     return list(callback);
 }

@@ -31,16 +31,16 @@ function update(event, context, callback) {
         },
         ExpressionAttributeNames: {
             '#name': 'name',
-            '#emailAddress': 'emailAddress',
+            '#temperature': 'temperature',
             '#updatedAt': 'updatedAt'
         },
         ExpressionAttributeValues: {
             ':name': data.name,
-            ':emailAddress': data.emailAddress,
+            ':temperature': data.temperature,
             ':updatedAt': new Date().getTime()
         },
         UpdateExpression: 'SET #name = :name,' +
-                              '#emailAddress = :emailAddress,' +
+                              '#temperature = :temperature,' +
                               '#updatedAt = :updatedAt',
         ReturnValues: 'ALL_NEW',
     };
