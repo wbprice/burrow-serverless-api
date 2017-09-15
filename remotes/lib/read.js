@@ -9,8 +9,7 @@ function list(callback) {
 
     dbClient.scan(params, (error, result) => {
         if (error) {
-            console.log(error);
-            return callback(new Error('Couldn\'t fetch records'))
+            return callback(error);
         }
 
         return callback(null, {
@@ -30,7 +29,7 @@ function readOne(id, callback) {
 
     dbClient.get(params, (error, result) => {
         if (error) {
-            return callback([]);
+            return callback(error);
         }
         return callback(null, {
             statusCode: 200,
@@ -50,8 +49,7 @@ function searchByOwner(owner, callback) {
 
     dbClient.scan(params, (error, result) => {
         if (error) { 
-            console.log(error);
-            return callback('Couldn\'t find that record');
+            return callback(error);
         }
         callback(null, {
             statusCode: 200,
