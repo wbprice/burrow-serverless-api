@@ -61,7 +61,7 @@ functions:
 
 resources:
   Resources:
-    UsersDynamoDbTable:
+    RemotesDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:

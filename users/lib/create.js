@@ -35,15 +35,13 @@ function create(event, context, callback) {
         }
     };
 
-    dbClient.put(params, (error) => {
+    return dbClient.put(params, (error) => {
         // handle errors
         if (error) {
-            console.error(error);
-            callback(new Error('Couldn\'t create the user'));
-            return;
+            return callback(error);
         }
 
-        callback(null, {
+        return callback(null, {
             statusCode: 200,
             body: JSON.stringify(params.Item)
         });

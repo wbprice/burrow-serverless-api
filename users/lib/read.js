@@ -7,10 +7,9 @@ function list(callback) {
         TableName: process.env.DYNAMODB_TABLE
     }
 
-    dbClient.scan(params, (error, result) => {
+    return dbClient.scan(params, (error, result) => {
         if (error) {
-            console.log(error);
-            return callback(new Error('Couldn\'t fetch records'))
+            return callback(error);
         }
 
         return callback(null, {
@@ -28,10 +27,9 @@ function readOne(id, callback) {
         }
     }
 
-    dbClient.get(params, (error, result) => {
+    return dbClient.get(params, (error, result) => {
         if (error) {
-            console.log(error);
-            return callback(new Error('Could\'t fetch that record.'));
+            return callback(error);
         }
         return callback(null, {
             statusCode: 200,
@@ -49,12 +47,11 @@ function searchByEmailAddress(emailAddress, callback) {
         }
     }
 
-    dbClient.scan(params, (error, result) => {
+    return dbClient.scan(params, (error, result) => {
         if (error) { 
-            console.log(error);
-            return callback('Couldn\'t find that record');
+            return callback(error);
         }
-        callback(null, {
+        return callback(null, {
             statusCode: 200,
             body: JSON.stringify(result.Items)
         });

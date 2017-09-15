@@ -14,14 +14,13 @@ function update(event, context, callback) {
     const id = event.pathParameters.id;
 
     if (!id) {
-        callback(new Error('An ID is required to update a record.'));
-        return;
+        return callback(new Error('An ID is required to update a record.'));
     }
 
     const data = event.body && JSON.parse(event.body);
 
     if (!Object.keys(data).length) {
-        callback(new Error('Data is required to update.'));
+        return callback(new Error('Data is required to update.'));
     }
 
     const params = {
@@ -45,12 +44,11 @@ function update(event, context, callback) {
         ReturnValues: 'ALL_NEW',
     };
 
-    dbClient.update(params, (err, data) => {
+    return dbClient.update(params, (err, data) => {
         if (err) {
-            console.log(err);
-            return
+            return callback(err);
         }
-        callback(null, {
+        return callback(null, {
             statusCode: 200,
             body: JSON.stringify(data.Attributes)
         });

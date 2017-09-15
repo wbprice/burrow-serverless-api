@@ -18,11 +18,8 @@ function del(event, context, callback) {
     // An id is required to delete a record.
     const id = event.pathParameters.id;
 
-    console.log(event);
-    
     if (!id) {
-        callback(new Error('An ID is required to delete a record'));
-        return;
+        return callback(new Error('An ID is required to delete a record'));
     }
 
     const params = {
@@ -32,12 +29,12 @@ function del(event, context, callback) {
         }
     }
 
-    dbClient.delete(params, (error, record) => {
+    return dbClient.delete(params, (error, record) => {
         if (error) {
-            callback(error);
+            return callback(error);
         }
 
-        callback(null, {
+        return callback(null, {
             statusCode: 200,
             body: JSON.stringify(record)
         })

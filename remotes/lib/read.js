@@ -7,7 +7,7 @@ function list(callback) {
         TableName: process.env.DYNAMODB_TABLE
     }
 
-    dbClient.scan(params, (error, result) => {
+    return dbClient.scan(params, (error, result) => {
         if (error) {
             return callback(error);
         }
@@ -27,7 +27,7 @@ function readOne(id, callback) {
         }
     }
 
-    dbClient.get(params, (error, result) => {
+    return dbClient.get(params, (error, result) => {
         if (error) {
             return callback(error);
         }
@@ -47,11 +47,11 @@ function searchByOwner(owner, callback) {
         }
     }
 
-    dbClient.scan(params, (error, result) => {
+    return dbClient.scan(params, (error, result) => {
         if (error) { 
             return callback(error);
         }
-        callback(null, {
+        return callback(null, {
             statusCode: 200,
             body: JSON.stringify(result.Items)
         });
