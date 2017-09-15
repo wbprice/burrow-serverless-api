@@ -22,12 +22,13 @@ function create(event, context, callback) {
     }
     
     const data = JSON.parse(event.body);
+
     const timestamp = new Date().getTime();
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
         Item: {
             id: uuid.v1(),
-            ownedBy: 'unowned',
+            ownedBy: data && data.ownedBy || 'unowned',
             name: data && data.name || 'Remote',
             temperature: data && data.temperature || 72,
             createdAt: timestamp,
@@ -38,8 +39,7 @@ function create(event, context, callback) {
     dbClient.put(params, (error) => {
         // handle errors
         if (error) {
-            console.error(error);
-            callback(new Error('Couldn\'t create the remote'));
+            callback(error);
             return;
         }
 
