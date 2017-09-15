@@ -41,9 +41,9 @@ function readOne(id, callback) {
 function searchByOwner(owner, callback) {
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
-        FilterExpression: 'owner = :owner',
-        ExpressionAttributeValues: {
-            ':owner': owner
+        FilterExpression: 'ownedBy = :ownedBy',
+        ExpressionAttributeNames: {
+            ':ownedBy': owner
         }
     }
 

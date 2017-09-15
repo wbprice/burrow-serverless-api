@@ -27,7 +27,7 @@ function create(event, context, callback) {
         TableName: process.env.DYNAMODB_TABLE,
         Item: {
             id: uuid.v1(),
-            owner: 'unowned',
+            ownedBy: 'unowned',
             name: data && data.name || 'Remote',
             temperature: data && data.temperature || 72,
             createdAt: timestamp,
