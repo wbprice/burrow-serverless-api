@@ -30,8 +30,7 @@ function readOne(id, callback) {
 
     dbClient.get(params, (error, result) => {
         if (error) {
-            console.log(error);
-            return callback(new Error('Could\'t fetch that record.'));
+            return callback([]);
         }
         return callback(null, {
             statusCode: 200,
