@@ -1,4 +1,4 @@
-service: users
+service: login
 
 plugins:
   - serverless-offline
@@ -6,9 +6,12 @@ plugins:
 provider:
   name: aws
   runtime: nodejs6.10
+  environment:
+    USER_POOL_ID: "us-east-1_zQitSgr2g"
+    CLIENT_ID: "2cu6nb45dknrkvtvre202906q8"
 
-functions:
-  signup:
+functions: 
+  signup: 
     handler: handler.signup
     events:
       - http:

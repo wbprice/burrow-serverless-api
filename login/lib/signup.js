@@ -8,6 +8,10 @@ const {
 
 const UserPoolId = process.env.USER_POOL_ID;
 const ClientId = process.env.CLIENT_ID;
+const headers = JSON.stringify({
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": true
+});
 
 function signup(event, context, callback) {
 
@@ -15,27 +19,37 @@ function signup(event, context, callback) {
         return callback(new Error('Wrong content type'));
     }
 
-    const userPool = CognitoUserPool({
+    const data = JSON.parse(event.body);
+    const userPool = new CognitoUserPool({
         UserPoolId,
         ClientId
-    })
-
+    });
     const attributeList = [
-        CognitoUserAttribute({
+        new CognitoUserAttribute({
             Name: 'name',
             Value: data.name
         }),
-        CognitoUserAttribute({
+        new CognitoUserAttribute({
             Name: 'email',
-            Value: data.email'
+            Value: data.email
         })
     ];
 
-    return userPool.signup(data.emailAddress, data.password, attributeList, null, (err, result) => {
+    return userPool.signUp(data.emailAddress, data.password, attributeList, null, (err, result) => {
         if (err) {
-            return callback(err);
+            const response = {
+                statusCode: 500,
+                body: JSON.stringify(err)
+            };
+            return callback(null, response);
         } 
-        return callback(null, result.user);
+        
+        const response = {
+            statusCode: 200,
+            body: JSON.stringify(result.user)
+        };
+
+        return callback(null, response);
     });
 }
 
