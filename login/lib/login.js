@@ -7,6 +7,7 @@ const {
     AuthenticationDetails
 } = require('amazon-cognito-identity-js');
 
+const getUserAttributes = require('./util/getUserAttributes');
 const UserPoolId = process.env.USER_POOL_ID;
 const ClientId = process.env.CLIENT_ID;
 
@@ -32,38 +33,29 @@ function login(event, context, callback) {
         Pool: userPool
     });
 
-    cognitoUser.authenticateUser(authenticationDetails, {
+    return cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess(result) {
             const token = result.getAccessToken().getJwtToken();
-
-            return cognitoUser.getUserAttributes((err, result) => {
-
-                if (err) {
-                    callback(err);
-                }
             
-                const body = result.reduce((memo, item) => {
-                    memo[item.Name] = item.Value;
-                    return memo;
-                }, {token})
-
-                const response = {
+            return getUserAttributes(cognitoUser, (err, attributes) => {
+                return callback(null, {
                     statusCode: 200,
-                    body: JSON.stringify(body)
-                };
-
-                return callback(null, response);
-            });
+                    body: JSON.stringify(
+                        Object.assign(
+                            {}, 
+                            attributes,
+                            {token}
+                        )
+                    )
+                })
+            }); 
         },
         onFailure(err) {
-            const response = {
-                statusCode: 500,
-                body: JSON.stringify(err)
-            };
-
-            return callback(null, response);
+            return callback(err);
         }
-    });
+    })
+
+    return getAttributes(cognitoUser, authenticationDetails, callback);
 }
 
 module.exports = login;

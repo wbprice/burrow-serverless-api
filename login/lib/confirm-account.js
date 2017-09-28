@@ -8,6 +8,7 @@ const {
 
 const UserPoolId = process.env.USER_POOL_ID;
 const ClientId = process.env.CLIENT_ID;
+const getUserAttributes = require('./util/getUserAttributes')
 
 function confirmAccount(event, context, callback) {
     const {
