@@ -8,5 +8,6 @@
 
 module.exports = {
     login: require('./lib/login'),
-    signup: require('./lib/signup')
+    signup: require('./lib/signup'),
+    confirmAccount: require('./lib/confirm-account')
 };

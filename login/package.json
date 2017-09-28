@@ -1,0 +1,19 @@
+{
+  "name": "login",
+  "version": "0.1.0",
+  "description": "",
+  "main": "handler.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "amazon-cognito-identity-js": "^1.20.0",
+    "serverless-offline": "^3.15.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

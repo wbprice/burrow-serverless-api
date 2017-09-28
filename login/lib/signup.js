@@ -45,27 +45,12 @@ function signup(event, context, callback) {
         } 
 
         const { user } = result
+        const response = {
+            statusCode: 200,
+            body: JSON.stringify(user)
+        }
 
-        return user.getSession((sessionError, session) => {
-            if (sessionError) {
-                callback(sessionError);
-            }
-
-            return user.getUserAttributes((error, attributes) => {
-                if (error) {
-                    return callback(error);
-                }
-
-                console.log(attributes);
-
-                const response = {
-                    statusCode: 200,
-                    body: JSON.stringify(attributes)
-                };
-
-                return callback(null, response);
-            });
-        });
+        return callback(null, response);
     });
 }
 

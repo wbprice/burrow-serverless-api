@@ -21,9 +21,23 @@ functions:
           request: 
             template:
               application/json: '{
-                  "name": "$input.params(''name''",
+                  "name": "$input.params(''name'')",
                   "emailAddress": "$input.params(''emailAddress'')",
-                  "password": "$input.password"
+                  "password": "$input.params(''password'')"
+              }'
+
+  confirm-account:
+    handler: handler.confirmAccount
+    events: 
+      - http:
+          path: confirm-account
+          method: post
+          cors: true
+          request:
+            template:
+              application/json: '{
+                "username": "$input.params(''username'')",
+                "confirmationCode": "$input.params(''confirmationCode'')"
               }'
     
   login:
