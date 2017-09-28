@@ -43,13 +43,29 @@ function signup(event, context, callback) {
             };
             return callback(null, response);
         } 
-        
-        const response = {
-            statusCode: 200,
-            body: JSON.stringify(result.user)
-        };
 
-        return callback(null, response);
+        const { user } = result
+
+        return user.getSession((sessionError, session) => {
+            if (sessionError) {
+                callback(sessionError);
+            }
+
+            return user.getUserAttributes((error, attributes) => {
+                if (error) {
+                    return callback(error);
+                }
+
+                console.log(attributes);
+
+                const response = {
+                    statusCode: 200,
+                    body: JSON.stringify(attributes)
+                };
+
+                return callback(null, response);
+            });
+        });
     });
 }
 
