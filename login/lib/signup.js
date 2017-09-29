@@ -38,7 +38,7 @@ function signup(event, context, callback) {
     return userPool.signUp(data.emailAddress, data.password, attributeList, null, (err, result) => {
         if (err) {
             const response = {
-                statusCode: 500,
+                statusCode: 403,
                 body: JSON.stringify(err)
             };
             return callback(null, response);
