@@ -51,7 +51,10 @@ function login(event, context, callback) {
             }); 
         },
         onFailure(err) {
-            return callback(err);
+            return callback(null, {
+                statusCode: 400,
+                body: JSON.stringify(err)
+            });
         }
     })
 
