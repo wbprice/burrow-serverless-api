@@ -30,7 +30,7 @@ function confirmAccount(event, context, callback) {
 
     return cognitoUser.confirmRegistration(confirmationCode, true, (err, result) => {
         if (err) {
-            return callback(error);
+            return callback(err);
         }
         const response = {
             statusCode: 200,
