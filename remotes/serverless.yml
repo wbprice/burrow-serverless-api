@@ -8,16 +8,10 @@ provider:
   runtime: nodejs6.10
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
-  iamRoleStatements:
-  - Effect: Allow
-    Action:
-      - dynamodb:Query
-      - dynamodb:Scan
-      - dynamodb:GetItem
-      - dynamodb:PutItem
-      - dynamodb:UpdateItem
-      - dynamodb:DeleteItem
-    Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+    USER_POOL_ID: "us-east-1_zQitSgr2g"
+    CLIENT_ID: "2cu6nb45dknrkvtvre202906q8"
+    AWS_REGION: 'us-east-1'
+    IDENTITY_POOL_ID: "us-east-1:99c230af-7c8d-408d-8b6a-d90ee543f459"
 
 functions:
   create:
