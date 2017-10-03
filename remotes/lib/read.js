@@ -27,12 +27,19 @@ function list(event, context, callback) {
         }
     });
 
+    // it is known that my id is this...
+    const userId = 'us-east-1:9d37a391-4af4-410d-9151-34000ef42f61'
+
     const dbClient = new AWS.DynamoDB.DocumentClient();
     const params = {
-        TableName: process.env.DYNAMODB_TABLE
+        TableName: process.env.DYNAMODB_TABLE,
+        ExpressionAttributeValues: {
+            ':userId': userId
+        },
+        KeyConditionExpression: `user_id = :userId`
     }
 
-    return dbClient.scan(params, (error, result) => {
+    return dbClient.query(params, (error, result) => {
         if (error) {
             return callback(error, {
                 statusCode: 400,
