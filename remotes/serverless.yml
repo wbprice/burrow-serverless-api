@@ -10,7 +10,6 @@ provider:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
     USER_POOL_ID: "us-east-1_zQitSgr2g"
     CLIENT_ID: "2cu6nb45dknrkvtvre202906q8"
-    AWS_REGION: 'us-east-1'
     IDENTITY_POOL_ID: "us-east-1:99c230af-7c8d-408d-8b6a-d90ee543f459"
 
 functions:

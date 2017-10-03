@@ -3,71 +3,11 @@
 const AWS = require('aws-sdk');
 
 const { 
-        USER_POOL_ID, 
-        CLIENT_ID, 
-        IDENTIY_POOL_ID 
-      } = process.env;
-
-function readOne(id, callback) {
-    const params = {
-        TableName: process.env.DYNAMODB_TABLE,
-        Key: {
-            id: id
-        }
-    }
-
-    return dbClient.get(params, (error, result) => {
-        if (error) {
-            return callback(error);
-        }
-        return callback(null, {
-            statusCode: 200,
-            body: JSON.stringify(result.Item)
-        });
-    });
-}
-
-function searchByOwner(owner, callback) {
-    const params = {
-        TableName: process.env.DYNAMODB_TABLE,
-        FilterExpression: 'ownedBy = :ownedBy',
-        ExpressionAttributeNames: {
-            ':ownedBy': owner
-        }
-    }
-
-    return dbClient.scan(params, (error, result) => {
-        if (error) { 
-            return callback(error);
-        }
-        return callback(null, {
-            statusCode: 200,
-            body: JSON.stringify(result.Items)
-        });
-    });
-}
-
-/**
- * @name
- * read
- * @description
- *  
- * @param {*} event 
- * @param {*} context 
- * @param {*} callback 
- */
-
-function read(event, context, callback) {
-    const id = event.pathParameters && event.pathParameters.id;
-    const owner = event.queryStringParameters && event.queryStringParameters.owner;
-
-    if (id) {
-        return readOne(id, callback);
-    } else if (owner) {
-        return searchByOwner(owner, callback);
-    }
-    return list(callback);
-}
+    USER_POOL_ID, 
+    CLIENT_ID, 
+    IDENTITY_POOL_ID,
+    AWS_REGION
+} = process.env;
 
 function list(event, context, callback) {
     const token = event.headers.Authorization && event.headers.Authorization.replace('Bearer ', ''); 
@@ -75,30 +15,38 @@ function list(event, context, callback) {
     if (!token) {
         return callback(null, {
             statusCode: 403,
-            body: JSON.stringify('A bearer token is required to access this resource');
+            body: JSON.stringify('A bearer token is required to access this resource')
         });
     }
 
+    AWS.config.region = AWS_REGION;
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId : IDENTIY_POOL_ID,
+        IdentityPoolId : IDENTITY_POOL_ID,
         Logins : {
             [`cognito-idp.${AWS_REGION}.amazonaws.com/${USER_POOL_ID}`] : token
         }
     });
 
-    const dynamoDBClient = new AWS.DynamoDB.DocumentClient();
-    const params = {
-        TableName: process.env.DYNAMODB_TABLE
-    }
+    console.log(AWS.config.credentials);
 
-    return dbClient.scan(params, (error, result) => {
-        if (error) {
-            return callback(error);
+    AWS.config.credentials.refresh(() => {
+        const dbClient = new AWS.DynamoDB.DocumentClient();
+        const params = {
+            TableName: process.env.DYNAMODB_TABLE
         }
 
-        return callback(null, {
-            statusCode: 200,
-            body: JSON.stringify(result.Items)
+        return dbClient.scan(params, (error, result) => {
+            if (error) {
+                return callback(error, {
+                    statusCode: 400,
+                    body: JSON.stringify(error)
+                });
+            }
+
+            return callback(null, {
+                statusCode: 200,
+                body: JSON.stringify(result.Items)
+            });
         });
     });
 }
