@@ -27,26 +27,22 @@ function list(event, context, callback) {
         }
     });
 
-    console.log(AWS.config.credentials);
+    const dbClient = new AWS.DynamoDB.DocumentClient();
+    const params = {
+        TableName: process.env.DYNAMODB_TABLE
+    }
 
-    AWS.config.credentials.refresh(() => {
-        const dbClient = new AWS.DynamoDB.DocumentClient();
-        const params = {
-            TableName: process.env.DYNAMODB_TABLE
+    return dbClient.scan(params, (error, result) => {
+        if (error) {
+            return callback(error, {
+                statusCode: 400,
+                body: JSON.stringify(error)
+            });
         }
 
-        return dbClient.scan(params, (error, result) => {
-            if (error) {
-                return callback(error, {
-                    statusCode: 400,
-                    body: JSON.stringify(error)
-                });
-            }
-
-            return callback(null, {
-                statusCode: 200,
-                body: JSON.stringify(result.Items)
-            });
+        return callback(null, {
+            statusCode: 200,
+            body: JSON.stringify(result.Items)
         });
     });
 }

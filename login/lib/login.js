@@ -34,21 +34,29 @@ function login(event, context, callback) {
     });
 
     return cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess(result) {
-            const token = result.getAccessToken().getJwtToken();
+        onSuccess(tokens) {
             
             return getUserAttributes(cognitoUser, (err, attributes) => {
+
+                if (err) {
+                    return callback(null, {
+                        statusCode: 400,
+                        body: JSON.stringify(err)
+                    })
+                }
+
                 return callback(null, {
                     statusCode: 200,
                     body: JSON.stringify(
                         Object.assign(
                             {}, 
                             attributes,
-                            {token}
+                            {tokens}
                         )
                     )
                 })
             }); 
+
         },
         onFailure(err) {
             return callback(null, {
