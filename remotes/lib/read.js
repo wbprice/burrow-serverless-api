@@ -27,29 +27,36 @@ function list(event, context, callback) {
         }
     });
 
-    // it is known that my id is this...
-    const userId = 'us-east-1:9d37a391-4af4-410d-9151-34000ef42f61'
-
-    const dbClient = new AWS.DynamoDB.DocumentClient();
-    const params = {
-        TableName: process.env.DYNAMODB_TABLE,
-        ExpressionAttributeValues: {
-            ':userId': userId
-        },
-        KeyConditionExpression: `user_id = :userId`
-    }
-
-    return dbClient.query(params, (error, result) => {
+    return AWS.config.credentials.get((error) => {
         if (error) {
             return callback(error, {
                 statusCode: 400,
                 body: JSON.stringify(error)
-            });
+            });      
+        } 
+
+        const userId = AWS.config.credentials.identityId;
+        const dbClient = new AWS.DynamoDB.DocumentClient();
+        const params = {
+            TableName: process.env.DYNAMODB_TABLE,
+            ExpressionAttributeValues: {
+                ':userId': userId
+            },
+            KeyConditionExpression: `user_id = :userId`
         }
 
-        return callback(null, {
-            statusCode: 200,
-            body: JSON.stringify(result.Items)
+        return dbClient.query(params, (error, result) => {
+            if (error) {
+                return callback(error, {
+                    statusCode: 400,
+                    body: JSON.stringify(error)
+                });
+            }
+
+            return callback(null, {
+                statusCode: 200,
+                body: JSON.stringify(result.Items)
+            });
         });
     });
 }
