@@ -19,7 +19,10 @@ functions:
       - http:
           path: remotes
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Authorization
 
   read:
     handler: handler.read
@@ -31,14 +34,6 @@ functions:
             origin: '*'
             headers:
               - Authorization
-          request:
-            template:
-                application/json: '{ "name" : "$input.params(''name''", "temperature": "$input.params(''temperature''"}'
-
-      - http: 
-          path: remotes/{id}
-          method: get 
-          cors: true
   
   update:
     handler: handler.update
@@ -46,7 +41,10 @@ functions:
       - http: 
           path: remotes/{id}
           method: put
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Authorization
 
   delete:
     handler: handler.delete
@@ -54,7 +52,10 @@ functions:
       - http:
           path: remotes/{id}
           method: delete
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Authorization
 
 resources:
   Resources:
@@ -63,14 +64,18 @@ resources:
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: temperature
+            AttributeType: N
           - AttributeName: user_id
             AttributeType: S
-          - AttributeName: location
+          - AttributeName: name
             AttributeType: S
         KeySchema:
           - AttributeName: user_id
             KeyType: HASH
-          - AttributeName: location 
+          - AttributeName: name 
             KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1

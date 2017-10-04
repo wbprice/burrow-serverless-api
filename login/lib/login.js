@@ -35,28 +35,10 @@ function login(event, context, callback) {
 
     return cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess(tokens) {
-            
-            return getUserAttributes(cognitoUser, (err, attributes) => {
-
-                if (err) {
-                    return callback(null, {
-                        statusCode: 400,
-                        body: JSON.stringify(err)
-                    })
-                }
-
-                return callback(null, {
-                    statusCode: 200,
-                    body: JSON.stringify(
-                        Object.assign(
-                            {}, 
-                            attributes,
-                            {tokens}
-                        )
-                    )
-                })
-            }); 
-
+            return callback(null, {
+                statusCode: 200,
+                body: JSON.stringify(tokens)
+            })
         },
         onFailure(err) {
             return callback(null, {
@@ -64,9 +46,7 @@ function login(event, context, callback) {
                 body: JSON.stringify(err)
             });
         }
-    })
-
-    return getAttributes(cognitoUser, authenticationDetails, callback);
+    });
 }
 
 module.exports = login;

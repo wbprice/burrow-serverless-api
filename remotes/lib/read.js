@@ -15,7 +15,7 @@ function list(event, context, callback) {
     if (!token) {
         return callback(null, {
             statusCode: 403,
-            body: JSON.stringify('A bearer token is required to access this resource')
+            body: JSON.stringify(new Error('A bearer token is required to access this resource'))
         });
     }
 
