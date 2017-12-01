@@ -70,7 +70,7 @@ function create(event, context, callback) {
 
         return dbClient.put(params, (error) => {
             if (error) {
-                return callback(error, {
+                return callback(null, {
                     statusCode: 500,
                     body: JSON.stringify(error)
                 });
