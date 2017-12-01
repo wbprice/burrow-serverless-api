@@ -9,6 +9,10 @@ const {
 const UserPoolId = process.env.USER_POOL_ID;
 const ClientId = process.env.CLIENT_ID;
 const getUserAttributes = require('./util/getUserAttributes')
+const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": true
+};
 
 function confirmAccount(event, context, callback) {
     const {
@@ -32,11 +36,13 @@ function confirmAccount(event, context, callback) {
         if (err) {
             return callback({
                 statusCode: 400,
+                headers,
                 body: JSON.stringify(err)
             });
         }
         const response = {
             statusCode: 200,
+            headers,
             body: JSON.stringify(result)
         };
 
