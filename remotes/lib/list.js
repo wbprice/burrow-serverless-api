@@ -67,6 +67,7 @@ function list(event, context, callback) {
 
             return callback(null, {
                 statusCode: 200,
+                headers,
                 body: JSON.stringify(result.Items)
             });
         });
