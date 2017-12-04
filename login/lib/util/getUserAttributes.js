@@ -1,19 +1,18 @@
-'use strict';
+'use strict'
 
-function getUserAttributes(cognitoUser, callback) {
-    return cognitoUser.getUserAttributes((err, result) => {
+function getUserAttributes (cognitoUser, callback) {
+  return cognitoUser.getUserAttributes((err, result) => {
+    if (err) {
+      callback(err)
+    }
 
-        if (err) {
-            callback(err);
-        }
-    
-        const body = result.reduce((memo, item) => {
-            memo[item.Name] = item.Value;
-            return memo;
-        }, {})
+    const body = result.reduce((memo, item) => {
+      memo[item.Name] = item.Value
+      return memo
+    }, {})
 
-        return callback(null, body);
-    });
+    return callback(null, body)
+  })
 }
 
-module.exports = getUserAttributes;
+module.exports = getUserAttributes
