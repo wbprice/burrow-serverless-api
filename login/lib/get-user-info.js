@@ -2,6 +2,11 @@
 
 const AWS = require('aws-sdk')
 
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
+
 function userAttributesToObject (attrs) {
   return attrs.reduce((memo, value) => {
     console.log(value)
@@ -16,6 +21,7 @@ function getUserInfo (event, context, callback) {
   if (!event.headers.Authorization) {
     return callback(null, {
       statusCode: 401,
+      headers,
       body: JSON.stringify({
         message: 'This endpoint requires a bearer token'
       })
@@ -30,12 +36,14 @@ function getUserInfo (event, context, callback) {
     if (error) {
       return callback(null, {
         statusCode: error.statusCode,
+        headers,
         body: JSON.stringify(error)
       })
     }
 
     return callback(null, {
       statusCode: 200,
+      headers,
       body: JSON.stringify(userAttributesToObject(data.UserAttributes))
     })
   })
