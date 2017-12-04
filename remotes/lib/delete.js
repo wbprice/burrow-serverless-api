@@ -1,6 +1,13 @@
 'use strict';
 
-const dbClient = require('./dbClient');
+const AWS = require('aws-sdk');
+
+const { 
+    USER_POOL_ID, 
+    CLIENT_ID, 
+    IDENTITY_POOL_ID,
+    AWS_REGION
+} = process.env;
 
 /**
  * @name 
@@ -22,22 +29,53 @@ function del(event, context, callback) {
         return callback(new Error('An ID is required to delete a record'));
     }
 
-    const params = {
-        TableName: process.env.DYNAMODB_TABLE,
-        Key: {
-            id: id
-        }
+    const token = event.headers.Authorization && event.headers.Authorization.replace('Bearer ', ''); 
+
+    if (!token) {
+        return callback(null, {
+            statusCode: 403,
+            body: JSON.stringify(new Error('A bearer token is required to access this resource'))
+        });
     }
 
-    return dbClient.delete(params, (error, record) => {
+    AWS.config.region = AWS_REGION;
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId : IDENTITY_POOL_ID,
+        Logins : {
+            [`cognito-idp.${AWS_REGION}.amazonaws.com/${USER_POOL_ID}`] : token
+        }
+    });
+
+    return AWS.config.credentials.get((error) => {
         if (error) {
-            return callback(error);
+            return callback(error, {
+                statusCode: 400,
+                body: JSON.stringify(error)
+            });      
+        } 
+
+        const userId = AWS.config.credentials.identityId;
+        console.log('userId', userId);
+        console.log('id', id);
+        const dbClient = new AWS.DynamoDB.DocumentClient();
+        const params = {
+            TableName: process.env.DYNAMODB_TABLE,
+            Key: {
+                user_id: userId, 
+                id: id
+            }
         }
 
-        return callback(null, {
-            statusCode: 200,
-            body: JSON.stringify(record)
-        })
+        return dbClient.delete(params, (error, record) => {
+            if (error) {
+                return callback(error);
+            }
+
+            return callback(null, {
+                statusCode: 200,
+                body: JSON.stringify(record)
+            });
+        });
     });
 }
 

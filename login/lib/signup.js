@@ -8,10 +8,10 @@ const {
 
 const UserPoolId = process.env.USER_POOL_ID;
 const ClientId = process.env.CLIENT_ID;
-const headers = JSON.stringify({
+const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Credentials": true
-});
+};
 
 function signup(event, context, callback) {
 
@@ -39,6 +39,7 @@ function signup(event, context, callback) {
         if (err) {
             const response = {
                 statusCode: 403,
+                headers,
                 body: JSON.stringify(err)
             };
             return callback(null, response);
@@ -47,6 +48,7 @@ function signup(event, context, callback) {
         const { user } = result
         const response = {
             statusCode: 200,
+            headers,
             body: JSON.stringify(user)
         }
 
