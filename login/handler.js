@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * @module users 
@@ -7,7 +7,8 @@
  */
 
 module.exports = {
-    login: require('./lib/login'),
-    signup: require('./lib/signup'),
-    confirmAccount: require('./lib/confirm-account')
-};
+  login: require('./lib/login'),
+  signup: require('./lib/signup'),
+  confirmAccount: require('./lib/confirm-account'),
+  getUserInfo: require('./lib/get-user-info')
+}
