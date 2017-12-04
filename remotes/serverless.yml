@@ -24,8 +24,8 @@ functions:
             headers:
               - Authorization
 
-  read:
-    handler: handler.read
+  list:
+    handler: handler.list
     events:
       - http:
           path: remotes

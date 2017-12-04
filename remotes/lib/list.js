@@ -9,14 +9,22 @@ const {
     AWS_REGION
 } = process.env;
 
+const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true
+}
+
 function list(event, context, callback) {
     const token = event.headers.Authorization && event.headers.Authorization.replace('Bearer ', ''); 
 
     if (!token) {
         return callback(null, {
-            statusCode: 403,
-            body: JSON.stringify(new Error('A bearer token is required to access this resource'))
-        });
+            statusCode: 401,
+            headers,
+            body: JSON.stringify({
+                message: 'This endpoint requires a bearer token'
+            })
+        })
     }
 
     AWS.config.region = AWS_REGION;
@@ -29,8 +37,10 @@ function list(event, context, callback) {
 
     return AWS.config.credentials.get((error) => {
         if (error) {
-            return callback(error, {
-                statusCode: 400,
+            console.log('credentials', error);
+            return callback(null, {
+                statusCode: error.statusCode,
+                headers,
                 body: JSON.stringify(error)
             });      
         } 
@@ -47,8 +57,10 @@ function list(event, context, callback) {
 
         return dbClient.query(params, (error, result) => {
             if (error) {
-                return callback(error, {
-                    statusCode: 400,
+                console.log('query', error);
+                return callback(null, {
+                    statusCode: error.statusCode,
+                    headers,
                     body: JSON.stringify(error)
                 });
             }
