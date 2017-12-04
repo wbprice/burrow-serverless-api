@@ -17,8 +17,9 @@ function userAttributesToObject (attrs) {
 
 function getUserInfo (event, context, callback) {
   const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider()
+  const token = event.headers.Authorization && event.headers.Authorization.replace('Bearer ', '')
 
-  if (!event.headers.Authorization) {
+  if (!token) {
     return callback(null, {
       statusCode: 401,
       headers,
@@ -28,11 +29,7 @@ function getUserInfo (event, context, callback) {
     })
   }
 
-  const params = {
-    AccessToken: event.headers.Authorization.replace('Bearer ', '')
-  }
-
-  return cognitoIdentityServiceProvider.getUser(params, (error, data) => {
+  return cognitoIdentityServiceProvider.getUser({AccessToken: token}, (error, data) => {
     if (error) {
       return callback(null, {
         statusCode: error.statusCode,
