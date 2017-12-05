@@ -9,6 +9,11 @@ const {
     AWS_REGION
 } = process.env;
 
+const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true
+}
+
 /**
  * @name
  * update 
@@ -27,6 +32,7 @@ function update(event, context, callback) {
     if (!token) {
         return callback(null, {
             statusCode: 403,
+            headers,
             body: JSON.stringify(new Error('A bearer token is required to access this resource'))
         });
     }
@@ -43,6 +49,7 @@ function update(event, context, callback) {
         if (error) {
             return callback(error, {
                 statusCode: 400,
+                headers,
                 body: JSON.stringify(error)
             });      
         } 
@@ -83,6 +90,7 @@ function update(event, context, callback) {
             }
             return callback(null, {
                 statusCode: 200,
+                headers,
                 body: JSON.stringify(data.Attributes)
             });
         });
