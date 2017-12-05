@@ -38,10 +38,7 @@ functions:
       - http: 
           path: remotes/{id}
           method: put
-          cors:
-            origin: '*'
-            headers:
-              - Authorization
+          cors: true
 
   delete:
     handler: handler.delete
