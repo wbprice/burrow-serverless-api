@@ -37,7 +37,6 @@ function list(event, context, callback) {
 
     return AWS.config.credentials.get((error) => {
         if (error) {
-            console.log('credentials', error);
             return callback(null, {
                 statusCode: error.statusCode,
                 headers,
