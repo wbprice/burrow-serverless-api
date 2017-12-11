@@ -8,6 +8,7 @@
 
 module.exports = {
   login: require('./lib/login'),
+  logout: require('./lib/logout'),
   signup: require('./lib/signup'),
   confirmAccount: require('./lib/confirm-account'),
   getUserInfo: require('./lib/get-user-info')

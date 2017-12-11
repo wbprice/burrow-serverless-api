@@ -55,6 +55,14 @@ functions:
                   "password": "$input.password"
               }'
 
+  logout:
+    handler: handler.logout
+    events:
+      - http:
+          path: logout
+          method: get
+          cors: true
+
   getUserInfo:
     handler: handler.getUserInfo
     events:
