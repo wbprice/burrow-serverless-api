@@ -2,7 +2,7 @@
 
 module.exports = {
     create: require('./lib/create'),
-    read: require('./lib/read'),
+    list: require('./lib/list'),
     update: require('./lib/update'),
     delete: require('./lib/delete')
 };

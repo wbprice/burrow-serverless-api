@@ -2,6 +2,10 @@
 
 const uuid = require('uuid');
 const AWS = require('aws-sdk');
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Credentials': true
+}
 
 const {
     USER_POOL_ID,
@@ -22,11 +26,6 @@ const {
  */
 
 function create(event, context, callback) {
-    // Only accept JSON.
-    if (event.headers["Content-Type"] !== 'application/json') {
-        return callback(new Error('Wrong content type'));
-    }
-
     const token = event.headers.Authorization && event.headers.Authorization.replace('Bearer ', '');
 
     if (!token) {
@@ -48,6 +47,7 @@ function create(event, context, callback) {
         if (error) {
             return callback(error, {
                 statusCode: 500,
+                headers,
                 body: JSON.stringify(error)
             });
         }
@@ -72,12 +72,14 @@ function create(event, context, callback) {
             if (error) {
                 return callback(null, {
                     statusCode: 500,
+                    headers,
                     body: JSON.stringify(error)
                 });
             }
 
             return callback(null, {
                 statusCode: 200,
+                headers,
                 body: JSON.stringify(params.Item)
             });
         });

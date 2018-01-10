@@ -19,13 +19,10 @@ functions:
       - http:
           path: remotes
           method: post
-          cors:
-            origin: '*'
-            headers:
-              - Authorization
+          cors: true
 
-  read:
-    handler: handler.read
+  list:
+    handler: handler.list
     events:
       - http:
           path: remotes
@@ -41,10 +38,7 @@ functions:
       - http: 
           path: remotes/{id}
           method: put
-          cors:
-            origin: '*'
-            headers:
-              - Authorization
+          cors: true
 
   delete:
     handler: handler.delete
