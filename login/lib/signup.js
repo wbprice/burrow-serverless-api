@@ -2,8 +2,7 @@
 
 const {
   CognitoUserPool,
-  CognitoUserAttribute,
-  CognitoUser
+  CognitoUserAttribute
 } = require('amazon-cognito-identity-js')
 
 const UserPoolId = process.env.USER_POOL_ID
@@ -14,10 +13,6 @@ const headers = {
 }
 
 function signup (event, context, callback) {
-  if (event.headers['Content-Type'] !== 'application/json') {
-    return callback(new Error('Wrong content type'))
-  }
-
   const data = JSON.parse(event.body)
   const userPool = new CognitoUserPool({
     UserPoolId,
@@ -26,11 +21,11 @@ function signup (event, context, callback) {
   const attributeList = [
     new CognitoUserAttribute({
       Name: 'name',
-      Value: data.name
+      Value: data.username
     }),
     new CognitoUserAttribute({
       Name: 'email',
-      Value: data.email
+      Value: data.emailAddress
     })
   ]
 
